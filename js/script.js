@@ -7,6 +7,9 @@ const username = "Lorna-V";
 // Unordered list to display the repos list.
 const repoList = document.querySelector(".repo-list");
 
+// Repo section and data
+const repoSection = document.querySelector(".repos");
+const repoDataSection = document.querySelector(".repo-data");
 
 //  USER & REPO DATA FETCH AND INFORMATION TO DISPLAY ------------------------------------------------------------
 
@@ -18,7 +21,6 @@ const gitUserInfo = async function (){
 };
 
 gitUserInfo();
-
 
 const displayUserInfo = function (data) {
   const div = document.createElement("div");
@@ -54,6 +56,45 @@ const displayRepos = function (repos){
   }
 };
 
+// Select and get specific repo info
+repoList.addEventListener ("click", function(e){
+  if (e.target.matches("h3")){
+    const repoName = e.target.innerText;
+    getRepoInfo(repoName);
+  }
+});
+
+const getRepoInfo = async function (repoName){
+  const fetchInfo = await fetch (`https://api.github.com/repos/${username}/${repoName}`);
+  const repoInfo = await fetchInfo.json();
+  console.log(repoInfo);
+  const fetchLanguages = await fetch (`https://api.github.com/repos/${username}/${repoName}/languages`);
+  const languageData = await fetchLanguages.json();
+  // console.log(languageData);
+  const languages = [];
+  for (const language in languageData){
+    languages.push(language);
+  }
+  // console.log(languages);
+  displayRepoInfo(repoInfo,languages);
+};
+
+const displayRepoInfo = function (repoInfo, languages){
+  repoSection.classList.add("hide");
+  repoDataSection.classList.remove("hide");
+  repoDataSection.innerHTML = "";
+
+  const dataSection = document.createElement ("div");
+  dataSection.classList.add("repo-data");
+  dataSection.innerHTML = `
+    <h3>Name: ${repoInfo.name}</h3>
+    <p>Description: ${repoInfo.description}</p>
+    <p>Default Branch: ${repoInfo.default_branch}</p>
+    <p>Languages: ${languages.join(", ")}</p>
+    <a class="visit" href="${repoInfo.html_url}" target="_blank" rel="noreferrer noopener">View Repo on GitHub!</a>
+  `;
+  repoDataSection.append(dataSection);
+};
 
 
 
