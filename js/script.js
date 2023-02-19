@@ -100,7 +100,7 @@ const displayRepoInfo = function (repoInfo, languages){
     <a class="visit" href="${repoInfo.html_url}" target="_blank" rel="noreferrer noopener">View Repo on GitHub!</a>
   `;
   repoDataSection.append(dataSection);
-  backButton.classList.remove("hide");
+  viewReposButton.classList.remove("hide");
 };
 
 // Back button and Search input (e is used for event)
